@@ -12,4 +12,9 @@ const sequelize = new Sequelize(
     }
 );
 
+connection.connect((err) => {
+    if (err) {
+        throw err;
+  }});
+
 module.exports = sequelize;
