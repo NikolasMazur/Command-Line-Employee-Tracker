@@ -1,21 +1,22 @@
-DROP DATABASE IF EXISTS company_database; --Replace 'company_database' with company name.
-CREATE DATABASE company_database; --Replace 'company_database' with company name.
+DROP DATABASE IF EXISTS company_database;
+CREATE DATABASE company_database;
 
-USE company_database; --Replace 'company_database' with company name.
+USE company_database;
 
 CREATE TABLE department (
-    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    department_name VARCHAR(60) NOT NULL
+    id INT NOT NULL AUTO_INCREMENT,
+    department_name VARCHAR(60) NOT NULL,
+    PRIMARY KEY (id)
 );
 
 CREATE TABLE roles (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     job_title VARCHAR(60) NOT NULL,
-    department_id INT NOT NULL,
-    salary DECIMAL NOT NULL
-    FOREIGN KEY (department_id)
+    department INT,
+    salary DECIMAL NOT NULL,
+    CONSTRAINT fk_department
+    FOREIGN KEY (department)
     REFERENCES department(id)
-    ON DELETE CASCADE
 );
 
 CREATE TABLE employee (
@@ -23,11 +24,9 @@ CREATE TABLE employee (
     first_name VARCHAR(60) NOT NULL,
     last_name VARCHAR(60) NOT NULL,
     role_id INT NOT NULL,
-    manager_id INT NOT NULL,
+    manager_id INT,
     FOREIGN KEY (role_id)
-    REFERENCES roles(id)
-    ON DELETE CASCADE
+    REFERENCES roles(id),
     FOREIGN KEY (manager_id)
     REFERENCES employee(id)
-    ON DELETE CASCADE
 );
