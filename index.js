@@ -210,4 +210,53 @@ const deleteDepartment = async () => {
   });
 };
 
+const deleteRole = async () => {
+  const [rowsA] = await db.findAllRoles();
+  console.table(rowsA);
+  const roleChoices = rowsA.map(({ id, title }) => ({
+    name: title,
+    value: id,
+  }));
+  console.log(roleChoices);
+  const response = await inquirer
+    .prompt([
+      {
+        type: "list",
+        name: "role",
+        message: "Which role do you want to delete?",
+        choices: roleChoices,
+      },
+    ])
+    .then((response) => {
+      db.dropRole(response.role);
+        db.findAllRoles().then(([rows]) => {
+            console.table(rows);
+            return start();
+        });
+    });
+};
+
+const deleteEmployee = async () => {
+  const [rowsA] = await db.findAllEmployees();
+  console.table(rowsA);
+  const employeeChoices = rowsA.map(({ id, name }) => ({ name,
+    value: id,
+  }));
+  console.table(employeeChoices);
+  const response = await inquirer.prompt([
+    {
+      type: "list",
+      name: "employee",
+      message: "Which employee do you want to delete?",
+      choices: employeeChoices,
+    },
+  ])
+  .then((response) => {
+    db.dropEmployee(response.employee);
+      db.findAllEmployees().then(([rows]) => {
+          console.table(rows);
+          return start();
+      });
+  });
+};
 start();
