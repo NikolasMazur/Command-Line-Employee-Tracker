@@ -66,6 +66,15 @@ updateAnEmployeeRole(roleId, employeeId) {
       roleId,
       employeeId,
     ]);
+}
+
+updateAnEmployeeManager(managerId, employeeId) {
+  return this.connection
+    .promise()
+    .query("UPDATE employee SET employee.manager_id = ? WHERE id = ?", [managerId, employeeId]);
+};
+findAllManagers(employeeId) {
+    return this.connection.promise().query("SELECT * FROM employee WHERE id != ?", [employeeId]);
 }};
 
 module.exports = new db(connection);

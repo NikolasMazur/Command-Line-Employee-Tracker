@@ -296,4 +296,39 @@ const updateEmployeeRole = async () => {
   });
 };
 
+const updateManager = async () => {
+  const [rowsB] = await db.findAllEmployees();
+  const employeeChoices = rowsB.map(mapChoices);
+  console.log(employeeChoices);
+  const { employee } = await inquirer.prompt([
+    {
+      type: "list",
+      name: "employee",
+      message: "Which employee's manager do you want to update?",
+      choices: employeeChoices,
+    },
+  ])
+  const [managerRows] = await db.findAllManagers(employee);
+  console.table(managerRows);
+  const managerChoices = managerRows.map(({ id, first_name, last_name }) => ({
+    name: `${first_name} ${last_name}`,
+    value: id
+  }));
+  managerChoices.push({ name: "No manager selected", value: null });
+  const { manager } = await inquirer.prompt([
+    {
+      type: "list",
+      name: "manager",
+      message: "Who is this employee's new manager?",
+      choices: managerChoices,
+    },
+  ]);
+  db.updateAnEmployeeManager(manager, employee).then(() => {
+    db.findAllEmployees().then(([rows]) => {
+      console.table(rows);
+      return start();
+    });
+  });
+};
+
 start();
