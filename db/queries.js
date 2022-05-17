@@ -46,6 +46,16 @@ addAnEmployee(answer) {
     .query("INSERT INTO employee SET ?", answer);
 };
 
+// Drop functions
+dropDepartment(departmentId) {
+  return this.connection.promise().query("DELETE FROM department WHERE id = ?", [departmentId]);
 };
+dropRole(roleId) {
+  console.log("roleId: ", roleId)
+  return this.connection.promise().query("DELETE FROM roles WHERE id = ?", [roleId]); 
+};
+dropEmployee(employeeId) {
+  return this.connection.promise().query("DELETE FROM employee WHERE id = ?", [employeeId]);
+}};
 
 module.exports = new db(connection);

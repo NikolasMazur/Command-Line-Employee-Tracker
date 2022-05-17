@@ -184,4 +184,30 @@ delete answer.manager;
   });
 };
 
+// Drop fucntion
+const deleteDepartment = async () => {
+  const [allDepartments] = await db.findAllDepartments();
+  console.table(allDepartments);
+  const departmentChoices = allDepartments.map(({ id, department_name }) => ({
+    name: department_name,
+    value: id,
+  }));
+  console.table(departmentChoices);
+  const { department } = await inquirer.prompt([
+    {
+      type: "list",
+      name: "department",
+      message: "Which department do you want to delete?",
+      choices: departmentChoices,
+    },
+  ]);
+
+  db.dropDepartment(department).then(() => {
+    db.findAllDepartments().then(([rows]) => {
+      console.table(rows);
+      return start();
+    });
+  });
+};
+
 start();
