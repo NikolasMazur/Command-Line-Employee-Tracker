@@ -28,12 +28,13 @@ const start = async () => {
   answer.menu();
 };
 
+// Utilities
 // Close program
 const exit = () => {
   console.log("Program closed.");
   process.exit(0);
 };
-
+// Checks if input is valid
 function validateInput(value) {
   if (value) {
     return true;
@@ -41,6 +42,10 @@ function validateInput(value) {
     console.log("\n Please enter a valid value");
     return false;
   }
+}
+// Map user choices
+function mapChoices({ id, name }) {
+  return { name, value: id };
 }
 
 // View functions
@@ -112,6 +117,67 @@ const addRole = async () => {
 
   db.addARole(answer.name, answer.salary, answer.department).then(() => {
     db.findAllRoles().then(([rows]) => {
+      console.table(rows);
+      return start();
+    });
+  });
+};
+
+const addEmployee = async () => {
+  const [rowsA] = await db.findAllRoles();
+  console.table(rowsA);
+  const roleChoices = rowsA.map(({ id, title }) => ({
+    name: title,
+    value: id,
+  }));
+  console.log(roleChoices);
+
+  const [rowsB] = await db.findAllEmployees();
+  const employeeChoices = rowsB.map(mapChoices);
+  console.log(employeeChoices);
+
+  const managerChoices = [...employeeChoices, { name: "Null" }];
+  console.log(managerChoices);
+  const answer = await inquirer.prompt([
+    {
+      type: "input",
+      name: "first_name",
+      message: "What is the employee's first name?",
+      validate: validateInput,
+    },
+    {
+      type: "input",
+      name: "last_name",
+      message: "What is the employee's last name?",
+      validate: validateInput,
+    },
+    {
+      type: "list",
+      name: "role_id",
+      message: "What is this employee's role?",
+      choices: roleChoices,
+    },
+    {
+      type: "confirm",
+      name: "manager",
+      message: "Does this employee have a manager?",
+      default: true,
+    },
+    {
+      type: "list",
+      name: "manager_id",
+      when: function (answers) {
+        return answers.manager === true;
+      },
+      message: "Who is this employee's manager?",
+      choices: managerChoices,
+    },
+]);
+
+delete answer.manager;
+  console.log(answer);
+  db.addAnEmployee(answer).then(() => {
+    db.findAllEmployees().then(([rows]) => {
       console.table(rows);
       return start();
     });
