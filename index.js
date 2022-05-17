@@ -56,4 +56,23 @@ function viewRoles() {
   });
 }
 
+// Add function
+const addDepartment = async () => {
+  const answer = await inquirer.prompt([
+    {
+      type: "input",
+      name: "name",
+      message: "What is the department name?",
+      validate: validateInput,
+    },
+  ]);
+  const departmentName = answer.name;
+  db.addADepartment(departmentName).then(() => {
+    db.findAllDepartments().then(([rows]) => {
+      console.table(rows);
+      return start();
+    });
+  });
+};
+
 start();
