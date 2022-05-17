@@ -20,6 +20,7 @@ const start = async () => {
         { name: "Delete department", value: deleteDepartment },
         { name: "Delete role", value: deleteRole },
         { name: "Delete employee", value: deleteEmployee },
+        // Closes program
         { name: "Exit", value: exit },
       ],
     },
@@ -27,9 +28,17 @@ const start = async () => {
   answer.menu();
 };
 
+// Close program
 const exit = () => {
   console.log("Program closed.");
   process.exit(0);
+};
+
+function viewDepartments() {
+  db.findAllDepartments().then(([rows]) => {
+    console.table(rows);
+    return start();
+  });
 };
 
 start();
