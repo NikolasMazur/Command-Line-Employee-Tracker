@@ -34,6 +34,15 @@ const exit = () => {
   process.exit(0);
 };
 
+function validateInput(value) {
+  if (value) {
+    return true;
+  } else {
+    console.log("\n Please enter a valid value");
+    return false;
+  }
+}
+
 // View functions
 function viewDepartments() {
   db.findAllDepartments().then(([rows]) => {
