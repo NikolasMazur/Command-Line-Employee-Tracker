@@ -5,7 +5,7 @@ class db {
     this.connection = connection;
 };
 
-//   Find functions
+//   Find queries
 findAllDepartments() {
     return this.connection.promise().query("SELECT * FROM department");
 };
@@ -23,6 +23,29 @@ findAllEmployees() {
     FROM
     employee LEFT JOIN roles ON employee.role_id = roles.id LEFT JOIN department ON roles.department = department.id LEFT JOIN employee manager ON manager.id = employee.manager_id`);
 };
+// Add functions
+addADepartment(departmentName) {
+  return this.connection
+    .promise()
+    .query("INSERT INTO department (department_name) VALUES (?)",
+    [departmentName]
+    );
+};
+// Non functional
+addARole(roleTitle, roleSalary, roleDepartmentId) {
+  return this.connection
+    .promise()
+    .query(
+      "INSERT INTO roles (title, salary, department) VALUES (?, ?, ?)",
+      [roleTitle, roleSalary, roleDepartmentId]
+    );
+};
+addAnEmployee(answer) {
+  return this.connection
+    .promise()
+    .query("INSERT INTO employee SET ?", answer);
+};
+
 };
 
 module.exports = new db(connection);

@@ -75,4 +75,38 @@ const addDepartment = async () => {
   });
 };
 
+// Currently non-functional
+const addRole = async () => {
+  const [rows] = await db.findAllDepartments();
+  console.table(rows);
+  const departmentChoices = rows.map(({ name, id }) => ({ name, value: id }));
+  const answer = await inquirer.prompt([
+    {
+      type: "input",
+      name: "name",
+      message: "What is the role title?",
+      validate: validateInput,
+    },
+    {
+      type: "input",
+      name: "salary",
+      message: "What is the salary for this role?",
+      validate: validateInput,
+    },
+    {
+      type: "list",
+      name: "department",
+      message: "Which department does this role belong to?",
+      choices: departmentChoices,
+    },
+  ]);
+
+  db.addARole(answer.name, answer.salary, answer.department).then(() => {
+    db.findAllRoles().then(([rows]) => {
+      console.table(rows);
+      return start();
+    });
+  });
+};
+
 start();
