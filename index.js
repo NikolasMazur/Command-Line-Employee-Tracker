@@ -34,11 +34,26 @@ const exit = () => {
   process.exit(0);
 };
 
+// View functions
 function viewDepartments() {
   db.findAllDepartments().then(([rows]) => {
     console.table(rows);
     return start();
   });
 };
+
+function viewEmployees() {
+  db.findAllEmployees().then(([rows]) => {
+    console.table(rows);
+    return start();
+  });
+}
+
+function viewRoles() {
+  db.findAllRoles().then(([rows]) => {
+    console.table(rows);
+    return start();
+  });
+}
 
 start();
