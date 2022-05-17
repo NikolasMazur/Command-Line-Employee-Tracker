@@ -27,4 +27,9 @@ const start = async () => {
   answer.menu();
 };
 
+const exit = () => {
+  console.log("Program closed.");
+  process.exit(0);
+};
+
 start();
