@@ -56,6 +56,16 @@ dropRole(roleId) {
 };
 dropEmployee(employeeId) {
   return this.connection.promise().query("DELETE FROM employee WHERE id = ?", [employeeId]);
+}
+
+// Update functions
+updateAnEmployeeRole(roleId, employeeId) {
+  return this.connection
+    .promise()
+    .query("UPDATE employee SET role_id = ? WHERE id = ?", [
+      roleId,
+      employeeId,
+    ]);
 }};
 
 module.exports = new db(connection);

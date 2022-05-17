@@ -184,7 +184,7 @@ delete answer.manager;
   });
 };
 
-// Drop fucntion
+// Drop fucntions
 const deleteDepartment = async () => {
   const [allDepartments] = await db.findAllDepartments();
   console.table(allDepartments);
@@ -259,4 +259,41 @@ const deleteEmployee = async () => {
       });
   });
 };
+
+// Update function
+const updateEmployeeRole = async () => {
+  const [rowsA] = await db.findAllRoles();
+  console.table(rowsA);
+  const roleChoices = rowsA.map(({ id, title }) => ({
+    name: title,
+    value: id,
+  }));
+  console.log(roleChoices);
+
+  const [rowsB] = await db.findAllEmployees();
+  const employeeChoices = rowsB.map(mapChoices);
+  console.log(employeeChoices);
+  const answer = await inquirer.prompt([
+    {
+      type: "list",
+      name: "employee",
+      message: "Which employee's role do you want to update?",
+      choices: employeeChoices,
+    },
+    {
+      type: "list",
+      name: "role",
+      message: "What is this employee's new role?",
+      choices: roleChoices,
+    },
+  ]);
+  console.log(answer);
+  db.updateAnEmployeeRole(answer.role, answer.employee).then(() => {
+    db.findAllEmployees().then(([rows]) => {
+      console.table(rows);
+      return start();
+    });
+  });
+};
+
 start();
